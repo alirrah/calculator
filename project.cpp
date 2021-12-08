@@ -89,6 +89,7 @@ public:
 
 int value(char);
 string infixToPostfix(string);
+string evalPostfix(string);
 
 int main()
 {
@@ -208,6 +209,73 @@ string infixToPostfix(string s)
                 result += tmp;
         }
         return result;
+    }
+    catch (...)
+    {
+        return "error";
+    }
+}
+
+string evalPostfix(string exp)
+{
+    try
+    {
+        List<string> history;
+        Stack<double> stack;
+        int start, last;
+        for (start = 0; start < exp.size(); start++)
+        {
+            for (last = start; exp[last] != ' ' && last < exp.size(); last++)
+            {
+            }
+            string tmp = "";
+            for (int i = start; i < last; i++)
+            {
+                tmp += exp[i];
+            }
+            if (tmp == "+")
+            {
+                stack.push(stack.pop() + stack.pop());
+            }
+            else if (tmp == "-")
+            {
+                stack.push(-1 * (stack.pop() - stack.pop()));
+            }
+            else if (tmp == "*")
+            {
+                stack.push(stack.pop() * stack.pop());
+            }
+            else if (tmp == "/")
+            {
+                double x = stack.pop(), y = stack.pop();
+                if (!x)
+                    throw "Dividing the number by zero is invalid.";
+                stack.push(y / x);
+            }
+            else if (tmp == "^")
+            {
+                double answer, x = stack.pop(), y = stack.pop();
+                answer = pow(y, x);
+                if (isnan(answer))
+                    throw "The answer is imaginary";
+                stack.push(answer);
+            }
+            else
+            {
+                int counter = 0;
+                for (char character : tmp)
+                    if (character == '.')
+                        counter++;
+                if (counter > 1)
+                    throw "The number is wrong.";
+                stack.push(stod(tmp));
+            }
+            start = last;
+            for (; exp[start + 1] == ' ' && start < exp.size(); start++)
+            {
+            }
+        }
+        return to_string(stack.top());
     }
     catch (...)
     {
