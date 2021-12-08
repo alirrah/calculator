@@ -58,6 +58,35 @@ public:
     }
 };
 
+template <typename T>
+class Stack
+{
+private:
+    List<T> list;
+
+public:
+    int size() const
+    {
+        return list.getSize();
+    }
+    bool isEmpty() const
+    {
+        return list.isEmpty();
+    }
+    void push(T data)
+    {
+        list.addFirst(data);
+    }
+    T top()
+    {
+        return list.first();
+    }
+    T pop()
+    {
+        return list.removeFirst();
+    }
+};
+
 int main()
 {
     return 0;
