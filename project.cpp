@@ -93,6 +93,17 @@ string evalPostfix(string);
 
 int main()
 {
+    while (true)
+    {
+        string s;
+        system("cls");
+        cout << "Enter your mathematical phrase (exit for closing)" << endl;
+        getline(cin, s);
+        if (s == "exit")
+            break;
+        s = infixToPostfix(s);
+        cout << (s != "error" ? evalPostfix(s) : "error") << endl;
+    }
     return 0;
 }
 
