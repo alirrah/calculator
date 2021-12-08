@@ -87,7 +87,130 @@ public:
     }
 };
 
+int value(char);
+string infixToPostfix(string);
+
 int main()
 {
     return 0;
+}
+
+int value(char c)
+{
+    if (c == '^')
+        return 3;
+    if (c == '/' || c == '*' || c == 'a')
+        return 2;
+    if (c == '+' || c == '-')
+        return 1;
+    return -1;
+}
+
+string infixToPostfix(string s)
+{
+    try
+    {
+        Stack<char> st;
+        string result;
+        for (int i = 0; i < s.length(); i++)
+        {
+            char c = s[i];
+            if (c == ' ')
+                continue;
+            else if (isdigit(c) || c == '.')
+                result += c;
+            else
+            {
+                switch (c)
+                {
+                case '(':
+                    st.push('(');
+                    break;
+                case '[':
+                    st.push('[');
+                    break;
+                case ')':
+                    while (st.top() != '(')
+                    {
+                        if (result != "" && result[result.size() - 1] != ' ')
+                            result += ' ';
+                        char tmp = st.pop();
+                        if (tmp == 'a')
+                            result += "-1 *";
+                        else
+                            result += tmp;
+                    }
+                    st.pop();
+                    break;
+                case ']':
+                    while (st.top() != '[')
+                    {
+                        if (result != "" && result[result.size() - 1] != ' ')
+                            result += ' ';
+                        char tmp = st.pop();
+                        if (tmp == 'a')
+                            result += "-1 *";
+                        else
+                            result += tmp;
+                    }
+                    st.pop();
+                    break;
+                default:
+                    if (c == '-' && (i == 0 || s[i - 1] == '(' || s[i - 1] == '*' || s[i - 1] == '-'))
+                    {
+                        st.push('a');
+                    }
+                    else
+                    {
+                        if (c == '^')
+                        {
+                            while (!st.isEmpty() && value(s[i]) < value(st.top()))
+                            {
+                                if (result != "" && result[result.size() - 1] != ' ')
+                                    result += ' ';
+                                char tmp = st.pop();
+                                if (tmp == 'a')
+                                    result += "-1 *";
+                                else
+                                    result += tmp;
+                            }
+                        }
+                        else
+                        {
+                            while (!st.isEmpty() && value(s[i]) <= value(st.top()))
+                            {
+                                if (result != "" && result[result.size() - 1] != ' ')
+                                    result += ' ';
+                                char tmp = st.pop();
+                                if (tmp == 'a')
+                                    result += "-1 *";
+                                else
+                                    result += tmp;
+                            }
+                        }
+                        if (result != "" && result[result.size() - 1] != ' ')
+                            result += ' ';
+                        st.push(c);
+                    }
+                }
+            }
+        }
+        while (!st.isEmpty())
+        {
+            if (st.top() == '(' || st.top() == '[')
+                throw "The number of parentheses is incorrect.";
+            if (result != "" && result[result.size() - 1] != ' ')
+                result += ' ';
+            char tmp = st.pop();
+            if (tmp == 'a')
+                result += "-1 *";
+            else
+                result += tmp;
+        }
+        return result;
+    }
+    catch (...)
+    {
+        return "error";
+    }
 }
