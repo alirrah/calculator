@@ -103,6 +103,7 @@ int main()
             break;
         s = infixToPostfix(s);
         cout << (s != "error" ? evalPostfix(s) : "error") << endl;
+        system("pause");
     }
     return 0;
 }
