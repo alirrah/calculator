@@ -34,3 +34,88 @@ class Stack:
         self.head.next = self.head.next.next
         self.size -= 1
         return remove.value
+
+
+def priority(char):
+    if char == '^':
+        return 3
+    if char == '/' or char == '*' or char == 'a':
+        return 2
+    if char == '+' or char == '-':
+        return 1
+    return -1
+
+
+def infixToPostfix(pharse):
+    try:
+        stack = Stack()
+        result = ''
+        for i in range(len(pharse)):
+            c = pharse[i]
+            if c == ' ':
+                continue
+            elif c.isnumeric() or c == '.':
+                result += c
+            else:
+                if c == '(':
+                    stack.push('(')
+                elif c == '[':
+                    stack.push('[')
+                elif c == ')':
+                    while stack.top() != '(':
+                        if result != "" and result[-1] != ' ':
+                            result += ' '
+                        tmp = stack.pop()
+                        if tmp == 'a':
+                            result += '-1 *'
+                        else:
+                            result += tmp
+                    stack.pop()
+                elif c == ']':
+                    while stack.top() != '[':
+                        if result != "" and result[-1] != ' ':
+                            result += ' '
+                        tmp = stack.pop()
+                        if tmp == 'a':
+                            result += '-1 *'
+                        else:
+                            result += tmp
+                    stack.pop()
+                else:
+                    if c == '-' and (i == 0 or pharse[i - 1] == '(' or pharse[i - 1] == '*' or pharse[i - 1] == '-'):
+                        stack.push('a')
+                    else:
+                        if c == '^':
+                            while not stack.isEmpty() and priority(c) < priority(stack.top()):
+                                if result != "" and result[-1] != ' ':
+                                    result += ' '
+                                tmp = stack.pop()
+                                if tmp == 'a':
+                                    result += '-1 *'
+                                else:
+                                    result += tmp
+                        else:
+                            while not stack.isEmpty() and priority(c) <= priority(stack.top()):
+                                if result != "" and result[-1] != ' ':
+                                    result += ' '
+                                tmp = stack.pop()
+                                if tmp == 'a':
+                                    result += '-1 *'
+                                else:
+                                    result += tmp
+                        if result != '' and result[-1] != ' ':
+                            result += ' '
+                        stack.push(c)
+        while not stack.isEmpty():
+            if stack.top() == '(' or stack.top() == '[':
+                raise Exception('The number of parentheses is incorrect.')
+            if result != '' and result[-1] != ' ':
+                result += ' '
+            tmp = stack.pop()
+            if tmp == 'a':
+                result += '-1 *'
+            else:
+                result += tmp
+        return result
+    except:
+        return 'error'
