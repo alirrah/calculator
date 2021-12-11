@@ -1,4 +1,5 @@
 import math
+import os
 
 
 class nodeStack:
@@ -199,3 +200,23 @@ def evalPostfix(pharse):
         return history
     except:
         return 'error'
+
+
+while True:
+    sentence = input('Enter the phrase (exit to end the program) : ')
+    if sentence == 'exit':
+        break
+    sentence = infixToPostfix(sentence)
+    if sentence == 'error':
+        print(sentence)
+    else:
+        sentence = evalPostfix(sentence)
+        if sentence == 'error':
+            print(sentence)
+        else:
+            print('\nHistory : ')
+            for i in sentence:
+                print(i)
+            print('\nAnswer is : ' + sentence[-1])
+    os.system('pause')
+    os.system('cls')
