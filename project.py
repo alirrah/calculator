@@ -124,25 +124,69 @@ def infixToPostfix(pharse):
         return 'error'
 
 
+def postfixToInfix(list):
+    changer = Stack()
+    for k in list:
+        if k in ['+', '-', '*', '/', '^']:
+            b = changer.pop()
+            a = changer.pop()
+            add_str = '(' + a + k + b + ')'
+            changer.push(add_str)
+        else:
+            changer.push(k)
+    return changer.pop()
+
+
 def evalPostfix(pharse):
     try:
         stack = Stack()
         l = pharse.split(' ')
+        history = []
+        history.append(postfixToInfix(l))
         i = 0
         while i < len(l):
             item = l[i]
             if item == '+':
                 stack.push(stack.pop() + stack.pop())
+                for __ in range(3):
+                    l.pop(i)
+                    i -= 1
+                i += 1
+                l = l[:i] + [str(stack.top())] + l[i:]
+                history.append(postfixToInfix(l))
             elif item == '-':
                 stack.push(-1 * (stack.pop() - stack.pop()))
+                for __ in range(3):
+                    l.pop(i)
+                    i -= 1
+                i += 1
+                l = l[:i] + [str(stack.top())] + l[i:]
+                history.append(postfixToInfix(l))
             elif item == '*':
                 stack.push(stack.pop() * stack.pop())
+                for __ in range(3):
+                    l.pop(i)
+                    i -= 1
+                i += 1
+                l = l[:i] + [str(stack.top())] + l[i:]
+                history.append(postfixToInfix(l))
             elif item == '/':
                 x, y = stack.pop(), stack.pop()
                 stack.push(y / x)
+                for __ in range(3):
+                    l.pop(i)
+                    i -= 1
+                i += 1
+                l = l[:i] + [str(stack.top())] + l[i:]
+                history.append(postfixToInfix(l))
             elif item == '^':
                 x, y = stack.pop(), stack.pop()
                 stack.push(math.pow(y, x))
+                for __ in range(3):
+                    l.pop(i)
+                    i -= 1
+                l = l[:i] + [str(stack.top)] + l[i:]
+                history.append(postfixToInfix(l))
             else:
                 counter = 0
                 for char in item:
@@ -152,6 +196,6 @@ def evalPostfix(pharse):
                     raise Exception('The number is wrong.')
                 stack.push(float(item))
             i += 1
-        return stack.top()
+        return history
     except:
         return 'error'
