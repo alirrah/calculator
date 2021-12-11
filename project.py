@@ -1,3 +1,6 @@
+import math
+
+
 class nodeStack:
 
     def __init__(self, value, next):
@@ -117,5 +120,38 @@ def infixToPostfix(pharse):
             else:
                 result += tmp
         return result
+    except:
+        return 'error'
+
+
+def evalPostfix(pharse):
+    try:
+        stack = Stack()
+        l = pharse.split(' ')
+        i = 0
+        while i < len(l):
+            item = l[i]
+            if item == '+':
+                stack.push(stack.pop() + stack.pop())
+            elif item == '-':
+                stack.push(-1 * (stack.pop() - stack.pop()))
+            elif item == '*':
+                stack.push(stack.pop() * stack.pop())
+            elif item == '/':
+                x, y = stack.pop(), stack.pop()
+                stack.push(y / x)
+            elif item == '^':
+                x, y = stack.pop(), stack.pop()
+                stack.push(math.pow(y, x))
+            else:
+                counter = 0
+                for char in item:
+                    if char == '.':
+                        counter += 1
+                if counter > 1:
+                    raise Exception('The number is wrong.')
+                stack.push(float(item))
+            i += 1
+        return stack.top()
     except:
         return 'error'
