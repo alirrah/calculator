@@ -193,7 +193,8 @@ def evalPostfix(pharse):
                 for __ in range(3):
                     l.pop(i)
                     i -= 1
-                l = l[:i] + [str(stack.top)] + l[i:]
+                i += 1
+                l = l[:i] + [str(stack.top())] + l[i:]
                 history.append(postfixToInfix(l))
             else:
                 counter = 0
@@ -288,17 +289,17 @@ while True:
     tmp = sentence
     print()
     if sentence == 'error':
-        print(sentence, end = '\n\n')
+        print(sentence, end='\n\n')
     else:
         sentence = evalPostfix(sentence)
         if sentence == 'error':
-            print(sentence, end = '\n\n')
+            print(sentence, end='\n\n')
         else:
             tree = makeTree(tmp)
             print_tree(tree)
             print('\nHistory : ')
             for i in sentence:
                 print(i)
-            print('\nAnswer is : ' + sentence[-1], end = '\n\n')
+            print('\nAnswer is : ' + sentence[-1], end='\n\n')
     os.system('pause')
     os.system('cls')
